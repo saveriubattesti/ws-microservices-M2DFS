@@ -16,30 +16,48 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-
-
+@RestController
 public class ProductController {
 
     @Autowired
     private ProductDao productDao;
 
+    private static List<Product> products = new ArrayList<Product>() {
+        {
+            add(new Product(1, "Ordinateur portable" , 350, 120));
+            add(new Product(2, "Aspirateur Robot" , 500, 200));
+            add(new Product(3, "Table de Ping Pong" , 750, 400));
+        }
+    };
 
     //Récupérer la liste des produits
     @RequestMapping(value = "/Produits", method = RequestMethod.GET)
-    public MappingJacksonValue listeProduits() {
+    public List<Product> listeProduits() {
+        return products;
+    }
+
+    /*public MappingJacksonValue listeProduits() {
         Iterable<Product> produits = productDao.findAll();
         SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("prixAchat");
         FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
         MappingJacksonValue produitsFiltres = new MappingJacksonValue(produits);
         produitsFiltres.setFilters(listDeNosFiltres);
         return produitsFiltres;
-    }
-
+    }*/
 
     //Récupérer un produit par son Id
-    public Product afficherUnProduit() {
+    @GetMapping("/Produit/{id}")
+    public Product afficherUnProduit(@PathVariable int id) {
+        for (Product product : products) {
+            if (product.getId() == id) return product;
+        }
+
         return null;
     }
 
@@ -65,11 +83,33 @@ public class ProductController {
     }
 
     // supprimer un produit
-    public void supprimerProduit() {
+    @DeleteMapping("/SupprProduit/{id}")
+    public void supprimerProduit(@PathVariable int id) {
+        products.removeIf(product -> product.getId() == id);
     }
 
     // Mettre à jour un produit
-    public void updateProduit(@RequestBody Product product) {
+    @PutMapping("/UpdateProduit/{id}")
+    public void updateProduit(@PathVariable int id, @RequestBody Product product) {
+        for (Product p : products) {
+            if (p.getId() == id) {
+                p.setId(product.getId());
+                p.setNom(product.getNom());
+                p.setPrix(product.getPrix());
+                p.setPrixAchat(product.getPrixAchat());
+            }
+        }
+    }
+
+    @GetMapping("/AdminProduits")
+    public Map<String, Integer> calculMargeProduit() {
+        Map<String, Integer> map = new HashMap<>();
+        for (Product product : products) {
+            int marge = product.getPrix() - product.getPrixAchat();
+            map.put(product.toString(), marge);
+        }
+
+        return map;
     }
 
 
