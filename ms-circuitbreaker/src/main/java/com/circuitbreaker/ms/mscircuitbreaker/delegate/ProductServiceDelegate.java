@@ -27,7 +27,7 @@ public class ProductServiceDelegate {
         return "NORMAL FLOW !!! - Student Details : " + response + "-";
     }
 
-    @HystrixCommand(fallbackMethod = "callProductServiceAndGetData_Fallback")
+    //@HystrixCommand(fallbackMethod = "callProductServiceAndGetData_Fallback")
     public String callProductServiceAndGetAllProducts() {
 
         String response = restTemplate.exchange(
@@ -39,7 +39,7 @@ public class ProductServiceDelegate {
         return "NORMAL FLOW !!! - Products Details : " + response + "-";
     }
 
-    @HystrixCommand(fallbackMethod = "callProductServiceAndGetData_Fallback")
+    //@HystrixCommand(fallbackMethod = "callProductServiceAndGetData_Fallback")
     public String callProductServiceAndGetMarge() {
 
         String response = restTemplate.exchange(
@@ -51,7 +51,7 @@ public class ProductServiceDelegate {
         return "NORMAL FLOW !!! - Products Details : " + response + "-";
     }
 
-    @HystrixCommand(fallbackMethod = "callProductServiceAndGetData_Fallback")
+    //@HystrixCommand(fallbackMethod = "callProductServiceAndGetData_Fallback")
     public String callProductServiceAndGetOrderedProducts() {
 
         String response = restTemplate.exchange(
@@ -64,10 +64,6 @@ public class ProductServiceDelegate {
     }
 
     public String callProductServiceAndGetData_Fallback(int id) {
-        return "Fallback response: Not available temporarily";
-    }
-
-    public String callProductServiceAndGetData_Fallback() {
         return "Fallback response: Not available temporarily";
     }
 
