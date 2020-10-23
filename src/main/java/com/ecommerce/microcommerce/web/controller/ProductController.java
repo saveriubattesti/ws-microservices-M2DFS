@@ -112,6 +112,11 @@ public class ProductController {
         return map;
     }
 
+    @GetMapping("/ProduitsParOrdreAlphabetique")
+    public List<Product> trierProduitsParOrdreAlphabetique() {
+        return productDao.trier();
+    }
+
 
     //Pour les tests
     @GetMapping(value = "test/produits/{prix}")
